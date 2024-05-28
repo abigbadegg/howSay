@@ -1,14 +1,12 @@
-server:
-  port: 8080
-  servlet:
-    context-path: /howSay
-
 spring:
   datasource:
-    url: jdbc:mysql://121.41.176.225:3306/how_say?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&tinyInt1isBit=false
+    url: jdbc:mysql://127.0.0.1:3316/how_say?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&tinyInt1isBit=false
     username: root   #用户名
-    password: 654321  #密码
+    password: root  #密码
     driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
     redisson:
       file: classpath:redisson.yml
+
+logging:
+  config: classpath:logback-dev.xml

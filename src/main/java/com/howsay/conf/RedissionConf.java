@@ -20,7 +20,7 @@ public class RedissionConf {
     @Bean
     public RedissonClient getRedissonClient() throws IOException {
         ResourceLoader loader = new DefaultResourceLoader();
-        Resource resource = loader.getResource("redission.yml");
+        Resource resource = loader.getResource("redisson.yml");
         Config config = Config.fromYAML(resource.getInputStream());
         config.useClusterServers();
         return Redisson.create(config);

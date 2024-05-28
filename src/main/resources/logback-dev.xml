@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration scan="true">
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder charset="UTF-8">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{traceId}][%thread][%logger{0}][%X{user}] %-5level - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="RollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/howSay/%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <maxHistory>15</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{traceId}][%thread][%logger{0}][%X{user}] %-5level - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="METRICS" class="com.darcytech.doris.alert.logback.DorisLogbackMetricsAppender"/>
+    <appender name="myAppender" class="com.howsay.util.MyLogbackAppender"/>
+
+    <root level="INFO">
+        <appender-ref ref="stdout"/>
+        <appender-ref ref="RollingFile"/>
+        <appender-ref ref="METRICS"/>
+        <appender-ref ref="myAppender"/>
+    </root>
+
+    <logger name="org.hibernate.SQL" level="INFO"/>
+
+</configuration>

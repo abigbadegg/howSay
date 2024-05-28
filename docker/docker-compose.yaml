@@ -1,0 +1,51 @@
+version: '3'
+services:
+  alertmanager:
+    container_name: alertManager
+    image: prom/alertmanager:latest
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./docker/alertmanager/:/etc/alertmanager
+
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    extra_hosts:
+      - "localhostme:10.11.5.148"
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./docker/prometheus/:/etc/prometheus-data/
+    command:
+      - '--web.enable-lifecycle'  #开启允许通过web接口刷新配置
+      - '--config.file=/etc/prometheus/prometheus.yml'
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: 'grafana'
+    ports:
+      - '3000:3000'
+    volumes:
+      # - ./grafana/provisioning/:/etc/grafana/provisioning/  #配置grafana的prometheus数据源
+      - /etc/localtime:/etc/localtime:ro
+    extra_hosts:
+      - "localhostme:10.11.5.148"
+    env_file:
+      - ./docker/grafana/config.monitoring  #grafana登录配置
+    depends_on:
+      - prometheus  #grafana需要在prometheus之后启动
+
+  nginx:
+    image: nginx:latest
+    container_name: 'nginx_proxy_self'
+    volumes:
+      - ./docker/conf.d:/etc/nginx/conf.d
+      - ./docker/logs/nginx:/etc/nginx/logs
+      - ./docker/conf/ssl:~/ssl
+    ports:
+      - "443:443"
+      - '80:80'
+    restart: always
+

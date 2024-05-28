@@ -1,7 +1,57 @@
 server:
-  port: 8080
+  port: 9000
   servlet:
     context-path: /howSay
+    # 开启tomcat相关指标
+  tomcat:
+    mbeanregistry:
+      enabled: true
+
 spring:
+  main:
+    allow-circular-references: true
+  application:
+    name: howSay
   profiles:
     active: dev
+management:
+  server:
+    port: 9001
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    prometheus:
+      enabled: true
+
+  metrics:
+    tags:
+      application: ${spring.application.name}
+      region: "my-region"
+    enable:
+      all: false
+      tomcat: true
+      web: true
+      http: true
+      hikaricp:
+        connections:
+          acquire: true
+      jdbc: true
+      executor: true
+    web:
+      server:
+        request:
+          autotime:
+            enabled: false
+
+doris:
+  alert:
+    appName: "howSayAppName"
+    podName: "howSayPodName"
+    errorLogAlertPackagePrefix: "com"
+    #alertManagerAddress: http://192.168.11.1:9093
+    alertManagerUsername: 2
+    alertManagerPassword: 1
+#debug: true
+
